@@ -2,54 +2,63 @@ import java.util.Scanner;
 
 public class EX15 {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        for (int i = 0; i < 12; i++) {
-            System.out.println("Item: " + i + ", preço unitário:");
-            double preco = sc.nextDouble();
-            System.out.println("Item: " + i + " refrigeração:");
-            String refrigeracao = sc.next();
-            System.out.println("Item: " + i + ", categoria:");
-            String categoria = sc.next();
-            // custo estocagem
-            double estocagem = 0;
-            System.out.println("->" + categoria + "<-");
-            if (preco <= 20) {
-                switch (categoria) {
-                    case "A" -> estocagem = 2;
-                    case "L" -> estocagem = 3;
-                    case "V" -> estocagem = 4;
-                }
-            } else if (preco <= 50 && refrigeracao.equals("S")) {
-                estocagem = 6;
+        Scanner scanner = new Scanner(System.in);
 
+        double custoTotalEstocagem = 0;
+
+        for (int i = 1; i <= 12; i++) {
+            System.out.println("Digite as informações do produto #" + i);
+            System.out.print("Preço Unitário: R$");
+            double precoUnitario = scanner.nextDouble();
+            System.out.print("Refrigeração (S/N): ");
+            char refrig = scanner.next().charAt(0);
+            System.out.print("Categoria (A/L/V): ");
+            char categoria = scanner.next().charAt(0);
+
+            double custoEstocagem = calcularCustoEstocagem(precoUnitario, refrig, categoria);
+            custoTotalEstocagem += custoEstocagem;
+
+            System.out.println("Custo de Estocagem: R$" + custoEstocagem);
+        }
+
+        System.out.println("\nCusto Total de Estocagem: R$" + custoTotalEstocagem);
+
+        scanner.close();
+    }
+
+    public static double calcularCustoEstocagem(double precoUnitario, char refrig, char categoria) {
+        if (precoUnitario <= 20.0) {
+            if (categoria == 'A') {
+                return 2.0;
+            } else if (categoria == 'L') {
+                return 3.0;
+            } else if (categoria == 'V') {
+                return 4.0;
+            }
+        } else if (precoUnitario <= 50.0) {
+            if (refrig == 'S') {
+                return 6.0;
             } else {
-                if (refrigeracao.equals("S")) {
-                    switch (categoria) {
-                        case "A" -> estocagem = 5;
-                        case "L" -> estocagem = 2;
-                        case "V" -> estocagem = 4;
-                    }
-                } else {
-                    if (categoria.equals("L")) {
-                        estocagem = 1;
-                    }
+                return 0.0;
+            }
+        } else {
+            if (refrig == 'S') {
+                if (categoria == 'A') {
+                    return 5.0;
+                } else if (categoria == 'L') {
+                    return 2.0;
+                } else if (categoria == 'V') {
+                    return 4.0;
+                }
+            } else {
+                if (categoria == 'A' || categoria == 'V') {
+                    return 0.0;
+                } else if (categoria == 'L') {
+                    return 1.0;
                 }
             }
-            double imposto = 0.02;
-            if (categoria.equals("A") && refrigeracao.equals("S")) {
-                imposto = 0.04;
-            }
-            double precoFinal = preco + estocagem + (preco * imposto);
-            String classificacao = "";
-            if (precoFinal <= 20) {
-                classificacao = "Barato";
-            } else if (precoFinal <= 100) {
-                classificacao = "Normal";
-            } else {
-                classificacao = "Caro";
-            }
-            System.out.println("O custo da estocagem é: " + estocagem);
         }
-        sc.close();
+
+        return 0.0; // Valor padrão se nenhuma condição for atendida
     }
 }
